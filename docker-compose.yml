@@ -1,0 +1,76 @@
+version: '3.7'
+
+services:
+  autotests:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.prod
+    container_name: autotests
+    command: python manage.py test
+    volumes:
+      - static:/home/app/web
+    expose:
+      - 8000
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+      - celery
+      - redis
+  runserver:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.prod
+    container_name: django
+    command: gunicorn api.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static:/home/app/web
+    expose:
+      - 8000
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+      - redis
+      - celery
+      - nginx
+  db:
+    image: postgres:12.0-alpine
+    container_name: psDB
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod.db
+  nginx:
+    container_name: nginx
+    restart: on-failure
+    build: ./nginx
+    volumes:
+      - static:/home/app/web
+    ports:
+      - "0.0.0.0:8000:80"
+  redis:
+    container_name: 'redis'
+    image: 'redis:5.0.7'
+    ports:
+      - 6379:6379
+    volumes:
+      - 'redisdata:/data'
+  celery:
+    build:
+      context: ./app
+      dockerfile: Dockerfile_celery
+    container_name: celery
+    volumes:
+      - static:/home/app/web
+    env_file:
+      - ./.env.prod
+    command: celery worker -A api --loglevel=debug --concurrency=4
+    links:
+      - redis
+    depends_on:
+      - redis
+volumes:
+  postgres_data:
+  static:
+  redisdata:
