@@ -33,6 +33,3 @@ def register_all_content_models_in_admin():
 
 register_all_content_models_in_admin()
 admin.site.register(Page, PageAdmin)
-# admin.site.register(ContentAudio, AudioContentAdmin)
-# admin.site.register(ContentVideo)
-# admin.site.register(ContentText)

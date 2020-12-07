@@ -15,11 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from page.views import PageListView, PageDetail
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/page-list', PageListView.as_view(), name='page-list'),
-    path('api/page-detail/<int:pk>', PageDetail.as_view(), name='page-detail')
+    path('api/', include('page.urls')),
 ]
