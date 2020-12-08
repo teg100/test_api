@@ -1,8 +1,6 @@
-import json
 from rest_framework import status
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import *
 from .serializers import *
 from rest_framework.request import Request
 from rest_framework.test import APIRequestFactory
@@ -24,8 +22,8 @@ class GetAllPagesTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-class GetSinglePuppyTest(TestCase):
-    """ Test module for GET single puppy API """
+class GetSinglePageTest(TestCase):
+    """ Test module for GET single page API """
     def setUp(self):
         self.casper = Page.objects.create(title='Casper')
         self.ac = ContentAudio.objects.create(title='Kiss', bitrate=320)

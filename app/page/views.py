@@ -5,9 +5,11 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from .tasks import update_view_count
 
+
 class PageListView(generics.ListAPIView):
     queryset = Page.objects.select_related()
     serializer_class = PageListSerializer
+
 
 class PageDetail(views.APIView):
 

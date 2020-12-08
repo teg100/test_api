@@ -13,6 +13,7 @@ class PCS(serializers.ModelSerializer):
     textcontent = create_content_serializer(ContentText)(source='content.contenttext')
     videocontent = create_content_serializer(ContentVideo)(source='content.contentvideo')
     audiocontent = create_content_serializer(ContentAudio)(source='content.contentaudio')
+
     class Meta:
         model = PageContents
         fields = ['textcontent', 'videocontent', 'audiocontent', 'content_order',]
