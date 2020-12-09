@@ -4,11 +4,11 @@ services:
   autotests:
     build:
       context: ./app
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     container_name: autotests
     command: python manage.py test
     volumes:
-      - static:/home/app/web
+      - ./app:/home/app/web
     expose:
       - 8000
     env_file:
@@ -20,11 +20,11 @@ services:
   runserver:
     build:
       context: ./app
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     container_name: django
     command: gunicorn api.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - static:/home/app/web
+      - ./app:/home/app/web
     expose:
       - 8000
     env_file:
@@ -46,7 +46,7 @@ services:
     restart: on-failure
     build: ./nginx
     volumes:
-      - static:/home/app/web
+      - ./app:/home/app/web
     ports:
       - "0.0.0.0:8000:80"
   redis:
@@ -62,7 +62,7 @@ services:
       dockerfile: Dockerfile_celery
     container_name: celery
     volumes:
-      - static:/home/app/web
+      - ./app:/home/app/web
     env_file:
       - ./.env.prod
     command: celery worker -A api --loglevel=debug --concurrency=4
